@@ -81,7 +81,7 @@ public class App extends Application {
         Point3 s2 = block.getPoints()[7];
         if(!movingFlag) {
             switch (e.getCode()) {
-                case RIGHT:
+                case D:
                     movingFlag = true;
                     if(s1.getX() > s2.getX()) {
                         if(s1.getY() > s2.getY()) {
@@ -97,7 +97,7 @@ public class App extends Application {
                         }
                     }
                     break;
-                case LEFT:
+                case A:
                     movingFlag = true;
                     if(s1.getX() < s2.getX()) {
                         if(s1.getY() > s2.getY()) {
@@ -113,7 +113,7 @@ public class App extends Application {
                         }
                     };
                     break;
-                case UP:
+                case W:
                     movingFlag = true;
                     if(s1.getZ() > s2.getZ()) {
                         if(s1.getY() > s2.getY()) {
@@ -130,7 +130,7 @@ public class App extends Application {
                     }
                     drawBlock();
                     break;
-                case DOWN:
+                case S:
                     movingFlag = true;
                     if(s1.getZ() < s2.getZ()) {
                         if(s1.getY() > s2.getY()) {
