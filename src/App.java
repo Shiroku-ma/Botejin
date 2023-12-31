@@ -1,5 +1,6 @@
 import java.net.URL;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -9,13 +10,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class App extends Application {
     private double canvasWidth = 800;
     private double canvasHeight = 600;
-    private double cam_z = 200;
+    private double cam_z = 500;
     private Canvas canvas;
     Block block;
+    private boolean movingFlag = false;
 
     public static void main(String[] args) throws Exception {
         launch();
@@ -32,7 +35,7 @@ public class App extends Application {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setLineWidth(2.0);
         g.setStroke(Color.rgb(255,0, 255));
-        block = new Block(-100, -100, 100, 50);
+        block = new Block(-100, -300, 100, 50);
         drawBlock();
 
         root.getChildren().add(canvas);
@@ -74,21 +77,141 @@ public class App extends Application {
     }
 
     private void keyPressed(KeyEvent e) {
-        switch (e.getCode()) {
-            case SPACE:
-                block.rotateZ(Math.PI / 36);
-                drawBlock();
-                break;
-            case RIGHT:
-                block.rotateY(Math.PI / 36);
-                drawBlock();
-                break;
-            case DOWN:
-                block.rotateX(Math.PI / 36);
-                drawBlock();
-                break;
-            default:
-                break;
+        Point3 s1 = block.getPoints()[0];
+        Point3 s2 = block.getPoints()[7];
+        if(!movingFlag) {
+            switch (e.getCode()) {
+                case RIGHT:
+                    movingFlag = true;
+                    if(s1.getX() > s2.getX()) {
+                        if(s1.getY() > s2.getY()) {
+                            tumbleZp(0, s1.getX(), s2.getY());
+                        } else {
+                            tumbleZp(0, s1.getX(), s1.getY());
+                        }
+                    } else {
+                        if(s1.getY() > s2.getY()) {
+                            tumbleZp(0, s2.getX(), s2.getY());
+                        } else {
+                            tumbleZp(0, s2.getX(), s1.getY());
+                        }
+                    }
+                    break;
+                case LEFT:
+                    movingFlag = true;
+                    if(s1.getX() < s2.getX()) {
+                        if(s1.getY() > s2.getY()) {
+                            tumbleZn(0, s1.getX(), s2.getY());
+                        } else {
+                            tumbleZn(0, s1.getX(), s1.getY());
+                        }
+                    } else {
+                        if(s1.getY() > s2.getY()) {
+                            tumbleZn(0, s2.getX(), s2.getY());
+                        } else {
+                            tumbleZn(0, s2.getX(), s1.getY());
+                        }
+                    };
+                    break;
+                case UP:
+                    movingFlag = true;
+                    if(s1.getZ() > s2.getZ()) {
+                        if(s1.getY() > s2.getY()) {
+                            tumbleXp(0, s1.getZ(), s2.getY());
+                        } else {
+                            tumbleXp(0, s1.getZ(), s1.getY());
+                        }
+                    } else {
+                        if(s1.getY() > s2.getY()) {
+                            tumbleXp(0, s2.getZ(), s2.getY());
+                        } else {
+                            tumbleXp(0, s2.getZ(), s1.getY());
+                        }
+                    }
+                    drawBlock();
+                    break;
+                case DOWN:
+                    movingFlag = true;
+                    if(s1.getZ() < s2.getZ()) {
+                        if(s1.getY() > s2.getY()) {
+                            tumbleXn(0, s1.getZ(), s2.getY());
+                        } else {
+                            tumbleXn(0, s1.getZ(), s1.getY());
+                        }
+                    } else {
+                        if(s1.getY() > s2.getY()) {
+                            tumbleXn(0, s2.getZ(), s2.getY());
+                        } else {
+                            tumbleXn(0, s2.getZ(), s1.getY());
+                        }
+                    }
+                default:
+                    break;
+            }
         }
+    }
+
+    private void tumbleZp(int i, double baseX, double baseY) {
+        PauseTransition p = new PauseTransition(Duration.millis(10));
+        p.setOnFinished(e->{
+            block.rotateZ(Math.PI / 90);
+            block.setPositionX(baseX - 25 * Math.sqrt(2) * Math.sin(Math.PI * (45 - i * 2)) / 180);
+            block.setPositionY(baseY + 25 * Math.sqrt(2) * Math.cos(Math.PI * (45 - i * 2)) / 180);
+            drawBlock();
+            if(i < 44)  {
+                tumbleZp(i+1, baseX, baseY);
+            } else {
+                movingFlag = false;
+            }
+        });
+        p.play();
+    }
+
+    private void tumbleZn(int i, double baseX, double baseY) {
+        PauseTransition p = new PauseTransition(Duration.millis(10));
+        p.setOnFinished(e->{
+            block.rotateZ(-Math.PI / 90);
+            block.setPositionX(baseX + 25 * Math.sqrt(2) * Math.sin(Math.PI * (45 - i * 2)) / 180);
+            block.setPositionY(baseY + 25 * Math.sqrt(2) * Math.cos(Math.PI * (45 - i * 2)) / 180);
+            drawBlock();
+            if(i < 44) {
+                tumbleZn(i+1, baseX, baseY);
+            } else {
+                movingFlag = false;
+            }
+        });
+        p.play();
+    }
+
+    private void tumbleXp(int i, double baseZ, double baseY) {
+        PauseTransition p = new PauseTransition(Duration.millis(10));
+        p.setOnFinished(e->{
+            block.rotateX(-Math.PI / 90);
+            block.setPositionZ(baseZ - 25 * Math.sqrt(2) * Math.sin(Math.PI * (45 - i * 2)) / 180);
+            block.setPositionY(baseY + 25 * Math.sqrt(2) * Math.cos(Math.PI * (45 - i * 2)) / 180);
+            drawBlock();
+            if(i < 44) {
+                tumbleXp(i+1, baseZ, baseY);
+            } else {
+                movingFlag = false;
+            }
+        });
+        p.play();
+    }
+
+    private void tumbleXn(int i, double baseZ, double baseY) {
+        PauseTransition p = new PauseTransition(Duration.millis(10));
+        p.setOnFinished(e->{
+            block.rotateX(Math.PI / 90);
+            block.setPositionZ(baseZ + 25 * Math.sqrt(2) * Math.sin(Math.PI * (45 - i * 2)) / 180);
+            block.setPositionY(baseY + 25 * Math.sqrt(2) * Math.cos(Math.PI * (45 - i * 2)) / 180);
+            drawBlock();
+            if(i < 44) {
+                tumbleXn(i+1, baseZ, baseY);
+            } else {
+                movingFlag = false;
+            }
+        });
+        p.play();
     }
 }

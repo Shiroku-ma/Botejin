@@ -19,6 +19,38 @@ public class Block {
         return this.points;
     }
 
+    public Point3 getPosition() {
+        return this.position;
+    }
+
+    public void setPosition(Point3 position) {
+        this.position = position;
+    }
+
+    public double getPositionX() {
+        return this.position.getX();
+    }
+
+    public double getPositionY() {
+        return this.position.getY();
+    }
+
+    public double getPositionZ() {
+        return this.position.getZ();
+    }
+
+    public void setPositionX(double x) {
+        this.position.setX(x);
+    }
+
+    public void setPositionY(double y) {
+        this.position.setY(y);;
+    }
+
+    public void setPositionZ(double z) {
+        this.position.setZ(z);;
+    }
+
     public void rotateX(double a) {
         for(int i = 0; i < 8; i++) {
             double y = points[i].getY() - position.getY();
