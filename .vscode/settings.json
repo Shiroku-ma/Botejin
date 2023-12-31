@@ -1,0 +1,15 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/Users/orange/Code/Java/javafx-sdk-21.0.1/lib/javafx-swt.jar",
+        "/Users/orange/Code/Java/javafx-sdk-21.0.1/lib/javafx.base.jar",
+        "/Users/orange/Code/Java/javafx-sdk-21.0.1/lib/javafx.controls.jar",
+        "/Users/orange/Code/Java/javafx-sdk-21.0.1/lib/javafx.fxml.jar",
+        "/Users/orange/Code/Java/javafx-sdk-21.0.1/lib/javafx.graphics.jar",
+        "/Users/orange/Code/Java/javafx-sdk-21.0.1/lib/javafx.media.jar",
+        "/Users/orange/Code/Java/javafx-sdk-21.0.1/lib/javafx.swing.jar",
+        "/Users/orange/Code/Java/javafx-sdk-21.0.1/lib/javafx.web.jar"
+    ]
+}
